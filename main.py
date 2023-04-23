@@ -13,7 +13,7 @@ def read_notes_file(file_name):  # Функция для чтения списк
 
 def save_notes_json(notes, file_name):  # Функция для сохранения списка заметок в файл
     with open(file_name, 'w') as f:
-        json.dump(notes, f)
+        json.dump(notes, f, indent=4, ensure_ascii=False, sort_keys=False, default=str)
 
 
 def print_notes(notes): # Функция для вывода выбранной записи или всего списка заметок
@@ -23,7 +23,7 @@ def print_notes(notes): # Функция для вывода выбранной 
         for note in notes:
             print(f'ID: {note["id"]}')
             print(f'Заголовок: {note["title"]}')
-            print(f'Тело заметки: {note["body"]}')
+            print(f'Текст заметки: {note["body"]}')
             print(f'Дата/время: {note["timestamp"]}')
             print('---')        
 
@@ -36,6 +36,16 @@ def add_note(notes): # Функция для добавления новой з�
     new_note = {'id': id, 'title': title, 'body': body, 'timestamp': timestamp}
     notes.append(new_note)
     return notes
+
+
+def filter_by_date(notes, date): # Функция для фильтрации заметок по дате
+    filtered_notes = []
+    for note in notes:
+        note_date = datetime.datetime.strptime(note['timestamp'], '%d-%m-%Y %H:%M:%S')
+        if note_date.date() == date:
+            filtered_notes.append(note)
+    print_notes(filtered_notes)
+
 
 
 def main():  # Функция главного меню
@@ -57,7 +67,13 @@ def main():  # Функция главного меню
 
         if choice == '1':
             print_notes(notes)
-        
+
+        elif choice == '2':
+            date_str = input('Введите дату в формате ДД-ММ-ГГГГ: ')
+            date = datetime.datetime.strptime(date_str, '%d-%m-%Y').date()
+            filter_by_date(notes, date)
+            # print_notes(filtered_notes)
+
         elif choice == '4':
             notes = add_note(notes)
             save_notes_json(notes, file_name)
