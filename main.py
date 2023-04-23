@@ -47,6 +47,12 @@ def filter_by_date(notes, date): # Функция для фильтрации з
     print_notes(filtered_notes)
 
 
+def delete_note(notes, id, file_name): # Функция для удаления заметки
+    for index, note in enumerate(notes):
+        if note['id'] == id:
+            del notes[index]
+    save_notes_json(notes, file_name)
+
 
 def main():  # Функция главного меню
 
@@ -72,11 +78,16 @@ def main():  # Функция главного меню
             date_str = input('Введите дату в формате ДД-ММ-ГГГГ: ')
             date = datetime.datetime.strptime(date_str, '%d-%m-%Y').date()
             filter_by_date(notes, date)
-            # print_notes(filtered_notes)
-
+            
         elif choice == '4':
             notes = add_note(notes)
             save_notes_json(notes, file_name)
+            print('Заметка успешно добавлена')
+
+        elif choice == '6':
+            id = int(input('Введите ID заметки для удаления: '))
+            notes = delete_note(notes, id)
+            print(f'Заметка №{id} удалена')
 
         elif choice == '7':
             break
