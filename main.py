@@ -13,8 +13,6 @@ def read_notes_file(): # Функция для чтения списка зам�
 def save_notes_json(notes):  # Функция для сохранения списка заметок в файл
     with open('notes.json', 'w', encoding='utf-8') as f:
         f.write(json.dumps(notes, indent=4, default=str))
-        # json.dump(notes, f, indent=4, ensure_ascii=False, sort_keys=False, default=str)
-        # json.dump(notes, f, indent=4)
 
 
 def print_notes(notes): # Функция для вывода выбранной записи или всего списка заметок
@@ -67,7 +65,6 @@ def filter_by_date(notes, date): # Функция для фильтрации з
         if note_date.date() == date:
             filtered_notes.append(note)
     return filtered_notes
-    # print_notes(filtered_notes)
 
 
 def delete_note_by_id(notes, id): # Функция для удаления заметки по номеру
@@ -75,8 +72,6 @@ def delete_note_by_id(notes, id): # Функция для удаления за�
         if note['id'] == id:
             del notes[index]
     return notes
-    # save_notes_json(notes)
-    # print(f'Заметка №{id} удалена')
 
 
 def delete_note_by_title(notes, title): # Функция для удаления заметки по заголовку
@@ -84,13 +79,10 @@ def delete_note_by_title(notes, title): # Функция для удаления
         if note['title'] == title:
             del notes[index]
     return notes
-    # save_notes_json(notes)
-    # print(f'Заметка удалена')
 
 
 def main():  # Функция главного меню
     
-    # file_name = "notes.json"
     notes = read_notes_file()
 
     while True:
@@ -113,7 +105,6 @@ def main():  # Функция главного меню
         elif choice == '2':
             date_str = input('Введите дату в формате ДД-ММ-ГГГГ: ')
             date = datetime.datetime.strptime(date_str, '%d-%m-%Y').date()
-            # filter_by_date(notes, date)
             filtered_notes = filter_by_date(notes, date)
             print_notes(filtered_notes)
 
