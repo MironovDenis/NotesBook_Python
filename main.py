@@ -41,21 +41,23 @@ def add_note(notes): # Функция для добавления новой з�
     timestamp = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     new_note = {'id': id, 'title': title, 'body': body, 'timestamp': timestamp}
     notes.append(new_note)
-    save_notes_json(notes)
-    print('Заметка успешно добавлена')
+    return notes
 
 
-def edit_note(notes, id):
-    for note in notes:
-        if note['id'] == id:
-            new_title = input(f'Введите новый заголовок (было: {note["title"]}): ')
-            new_body = input(f'Введите новое тело заметки (было: {note["body"]}): ')
-            note['title'] = new_title
-            note['body'] = new_body
-            note['timestamp'] = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-        break
-    save_notes_json(notes)
-    print(f'Заметка №{id} отредактирована')
+def edit_note(notes, id): # Функция для редактирования заметки
+        for note in notes:
+            count = 0                       
+            if note['id'] == id:
+                count = 1            
+                new_title = input(f'Введите новый заголовок (было: {note["title"]}): ')
+                new_body = input(f'Введите новое тело заметки (было: {note["body"]}): ')
+                note['title'] = new_title
+                note['body'] = new_body
+                note['timestamp'] = datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+                print(f'Заметка №{id} отредактирована')
+                break
+        if count == 0: print('Заметка с таким ID не найдена')    
+        return notes
 
 
 def filter_by_date(notes, date): # Функция для фильтрации заметок по дате
@@ -64,28 +66,31 @@ def filter_by_date(notes, date): # Функция для фильтрации з
         note_date = datetime.datetime.strptime(note['timestamp'], '%d-%m-%Y %H:%M:%S')
         if note_date.date() == date:
             filtered_notes.append(note)
-    print_notes(filtered_notes)
+    return filtered_notes
+    # print_notes(filtered_notes)
 
 
 def delete_note_by_id(notes, id): # Функция для удаления заметки по номеру
     for index, note in enumerate(notes):
         if note['id'] == id:
             del notes[index]
-    save_notes_json(notes)
-    print(f'Заметка №{id} удалена')
+    return notes
+    # save_notes_json(notes)
+    # print(f'Заметка №{id} удалена')
 
 
 def delete_note_by_title(notes, title): # Функция для удаления заметки по заголовку
     for index, note in enumerate(notes):
         if note['title'] == title:
             del notes[index]
-    save_notes_json(notes)
-    print(f'Заметка удалена')
+    return notes
+    # save_notes_json(notes)
+    # print(f'Заметка удалена')
 
 
 def main():  # Функция главного меню
     
-    file_name = "notes.json"
+    # file_name = "notes.json"
     notes = read_notes_file()
 
     while True:
@@ -100,6 +105,7 @@ def main():  # Функция главного меню
         print('8. Выход')
 
         choice = input('Ваш выбор: ')
+        print('---') 
 
         if choice == '1':
             print_notes(notes)
@@ -107,7 +113,9 @@ def main():  # Функция главного меню
         elif choice == '2':
             date_str = input('Введите дату в формате ДД-ММ-ГГГГ: ')
             date = datetime.datetime.strptime(date_str, '%d-%m-%Y').date()
-            filter_by_date(notes, date)
+            # filter_by_date(notes, date)
+            filtered_notes = filter_by_date(notes, date)
+            print_notes(filtered_notes)
 
         elif choice == '3':
             id = int(input('Введите ID заметки: '))
@@ -116,27 +124,28 @@ def main():  # Функция главного меню
             
         elif choice == '4':
             notes = add_note(notes)
-            # save_notes_json(notes, file_name)
-            # print('Заметка успешно добавлена')
+            save_notes_json(notes)
+            print('Заметка успешно добавлена')
             print('---') 
 
         elif choice == '5':
-            id = int(input('Введите ID заметки для редактирования: '))
+            id = int(input('Введите ID заметки для редактирования: '))            
             notes = edit_note(notes, id)
-            # save_notes_json(notes, file_name)
-            # print(f'Заметка №{id} отредактирована')
+            save_notes_json(notes)                        
             print('---')            
 
         elif choice == '6':
             id = int(input('Введите ID заметки для удаления: '))
             notes = delete_note_by_id(notes, id)
-            # print(f'Заметка №{id} удалена')
+            save_notes_json(notes)
+            print(f'Заметка №{id} удалена')
             print('---')
 
         elif choice == '7':
             title = input('Введите заголовок заметки для удаления: ')
             notes = delete_note_by_title(notes, title)
-            # print(f'Заметка удалена')
+            save_notes_json(notes)
+            print(f'Заметка удалена')
             print('---')  
 
         elif choice == '8':
